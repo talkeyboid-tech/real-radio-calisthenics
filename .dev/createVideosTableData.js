@@ -22,22 +22,22 @@ fs.writeFile(
 );
 
 // テスト用JSON作成
-const testVideos = videos.map((video) => {
-  const retObj = {};
-  retObj.id = video.id;
-  retObj.title = video.title;
-  retObj.description = video.description;
-  retObj.viewCount = video.view_count;
-  retObj.likeCount = video.like_count;
-  return retObj;
-});
+// const testVideos = videos.map((video) => {
+//   const retObj = {};
+//   retObj.id = video.id;
+//   retObj.title = video.title;
+//   retObj.description = video.description;
+//   retObj.viewCount = video.view_count;
+//   retObj.likeCount = video.like_count;
+//   return retObj;
+// });
 
 // テストで比較できるようソート
-testVideos.sort((a, b) => (a.id < b.id ? -1 : 1));
+videos.sort((a, b) => (a.id < b.id ? -1 : 1));
 
 fs.writeFile(
   './test/videosTableForTest.json',
-  JSON.stringify(testVideos, null, 2),
+  JSON.stringify(videos, null, 2),
   (err) => {
     if (err) throw err;
     console.log('The file has been saved!');

@@ -1,9 +1,7 @@
 const knex = require('../knex');
-const TABLE = 'videos';
+const VIDEOS_TBL = 'videos';
 
 const videoModel = {
-  TABLE,
-
   getAll(limit = 100) {
     return knex
       .select({
@@ -13,7 +11,7 @@ const videoModel = {
         viewCount: 'view_count',
         likeCount: 'like_count',
       })
-      .from(TABLE)
+      .from(VIDEOS_TBL)
       .limit(limit)
       .orderBy('id', 'asc');
   },
@@ -27,26 +25,39 @@ const videoModel = {
         viewCount: 'view_count',
         likeCount: 'like_count',
       })
-      .from(TABLE)
+      .from(VIDEOS_TBL)
       .where('id', '=', id)
+      .first();
+  },
+
+  getByQuery(query) {
+    console.log();
+    return knex
+      .select({
+        id: 'id',
+        title: 'title',
+        description: 'description',
+        viewCount: 'view_count',
+        likeCount: 'like_count',
+      })
+      .from(VIDEOS_TBL)
+      .where(query)
       .first();
   },
 
   create(obj) {
     return new Promise((resolve) => {
-      knex
+      knex(VIDEOS_TBL)
         .insert(obj)
-        .into(TABLE)
-        .returning('id')
         .then((res) => {
-          resolve(res[0].id);
+          resolve(res);
         });
     });
   },
 
   remove(id) {
     return new Promise((resolve) => {
-      knex(TABLE)
+      knex(VIDEOS_TBL)
         .where('id', '=', id)
         .del()
         .then((res) => {
@@ -57,7 +68,7 @@ const videoModel = {
 
   update(id, obj) {
     return new Promise((resolve, reject) => {
-      knex(TABLE)
+      knex(VIDEOS_TBL)
         .where('id', '=', id)
         .update(obj)
         .returning('id')
@@ -70,7 +81,9 @@ const videoModel = {
     });
   },
 };
-module.exports = { videoModel };
+
+module.exports = { videoModel, VIDEOS_TBL };
+
 // module.exports = {
 //   TABLE,
 
