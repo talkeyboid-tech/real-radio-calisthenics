@@ -8,7 +8,7 @@ module.exports = {
     return (propsToCheck) => {
       for (const p in propsToCheck) {
         if (!valid.includes(p)) {
-          throw new Error(
+          throw new TypeError(
             JSON.stringify({
               message: '不正な項目が含まれています',
               invalid: p,
@@ -29,7 +29,7 @@ module.exports = {
     return (propsToCheck) => {
       for (const p of required) {
         if (!propsToCheck[p]) {
-          throw new Error(
+          throw new TypeError(
             JSON.stringify({
               message: '必須項目がありません',
               required: p,
