@@ -10,7 +10,9 @@
     "test": "mocha test --exit",
     "test-with-lint": "mocha test && npm run lint",
     "migrate": "knex migrate:latest",
-    "seed": "knex seed:run"
+    "seed": "knex seed:run",
+    "dev-get-videos": "node ./.dev/getVideos.js",
+    "dev-create-videos-table": "node ./.dev/createVideosTableData.js"
   },
   "repository": {
     "type": "git",

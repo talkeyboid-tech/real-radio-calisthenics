@@ -104,5 +104,5 @@ dist
 # TernJS port file
 .tern-port
 
-# 個人的なファイル
+# 開発のための個人的なファイル
 .note.md
