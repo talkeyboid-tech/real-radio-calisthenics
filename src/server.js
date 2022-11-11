@@ -3,6 +3,7 @@ const express = require('express');
 
 const common = require('./common');
 const hogeModel = require('./models/hoge.model');
+const { videoModel } = require('./models/video.model');
 
 const setupServer = () => {
   const app = express();
@@ -38,6 +39,10 @@ const setupServer = () => {
     res.status(204).end();
   });
 
+  app.get('/videos', async (_, res) => {
+    const ret = await videoModel.getAll();
+    res.status(200).json(ret).end();
+  });
   return app;
 };
 
