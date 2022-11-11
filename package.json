@@ -44,6 +44,8 @@
     "knex": "^2.3.0",
     "lodash": "^4.17.21",
     "pg": "^8.8.0",
+    "swagger-jsdoc": "^6.2.5",
+    "swagger-ui-express": "^4.6.0",
     "underscore": "^1.13.6"
   }
 }

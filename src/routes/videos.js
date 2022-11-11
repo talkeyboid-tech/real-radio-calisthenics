@@ -26,9 +26,12 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     await videoModel.create(req.body);
-    res.status(201).end();
+    const retUrl = `http://localhost:3000/${req.body.id}`;
+    res.status(201).json(retUrl).end();
   } catch (err) {
-    res.status(400).json(JSON.parse(err.message)).end();
+    if (err instanceof TypeError)
+      return res.status(400).json(JSON.parse(err.message)).end();
+    return res.status(500).end();
   }
 });
 
@@ -36,15 +39,17 @@ router.patch('/:id', async (req, res) => {
   try {
     await videoModel.update(req.params.id, req.body);
     const ret = await videoModel.getById(req.params.id);
+    if (!ret) throw new ReferenceError();
     res.status(200).json(common.convertCamelToSnake(ret)).end();
   } catch (err) {
-    res.status(400).json(JSON.parse(err.message)).end();
+    if (err instanceof ReferenceError) return res.status(404).json([]).end();
+    return res.status(400).json(JSON.parse(err.message)).end();
   }
 });
 
 router.delete('/:id', async (req, res) => {
   const ret = await videoModel.remove(req.params.id);
-  return ret > 0 ? res.status(204).end() : res.status(404).end();
+  return ret > 0 ? res.status(204).end() : res.status(404).json([]).end();
 });
 
 module.exports = router;
