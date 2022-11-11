@@ -24,14 +24,22 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  await videoModel.create(req.body);
-  res.status(201).end();
+  try {
+    await videoModel.create(req.body);
+    res.status(201).end();
+  } catch (err) {
+    res.status(400).json(JSON.parse(err.message)).end();
+  }
 });
 
 router.patch('/:id', async (req, res) => {
-  await videoModel.update(req.params.id, req.body);
-  const ret = await videoModel.getById(req.params.id);
-  res.status(200).json(common.convertCamelToSnake(ret)).end();
+  try {
+    await videoModel.update(req.params.id, req.body);
+    const ret = await videoModel.getById(req.params.id);
+    res.status(200).json(common.convertCamelToSnake(ret)).end();
+  } catch (err) {
+    res.status(400).json(JSON.parse(err.message)).end();
+  }
 });
 
 router.delete('/:id', async (req, res) => {
