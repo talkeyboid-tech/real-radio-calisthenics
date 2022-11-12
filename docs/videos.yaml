@@ -46,15 +46,50 @@ paths:
       description: "ラジオ動画情報一覧を取得する。\n\nクエリパラメータ\n\n - 指定なし: 全件取得\n\n- 指定あり: AND条件で実行"
       parameters:
         - in: query
+          name: limit
+          description: limit
+          schema:
+            type: number
+        - in: query
+          name: offset
+          description: offset（指定した次の要素から）
+          schema:
+            type: number
+        - in: query
           name: id
-          description: 動画ID
+          description: 動画ID（完全一致）
           schema:
             type: string
         - in: query
           name: title
-          description: 動画タイトル
+          description: 動画タイトル（部分一致）
           schema:
             type: string
+        - in: query
+          name: description
+          description: 動画概要説明（部分一致）
+          schema:
+            type: string
+        - in: query
+          name: view_count_gt
+          description: 再生回数（以上）
+          schema:
+            type: number
+        - in: query
+          name: view_count_lt
+          description: 再生回数（未満）
+          schema:
+            type: number
+        - in: query
+          name: like_count_gt
+          description: 高評価数（以上）
+          schema:
+            type: number
+        - in: query
+          name: like_count_lt
+          description: 高評価数（未満）
+          schema:
+            type: number
       responses:
         200:
           description: 成功時
@@ -80,9 +115,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  properties:
+                    url:
+                      type: string
                 example:
-                  url: http://localhost:3000/videos/feSVtC1BSeQ
+                  - url: http://localhost:3000/videos/feSVtC1BSeQ
         400:
           description: 項目エラー
           content:

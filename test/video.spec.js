@@ -45,11 +45,154 @@ describe('Solo API Server', () => {
         res.should.have.status(200);
         res.body.should.to.deep.equal([VIDEOS_JSON[2]]);
       });
-      it('HTTP200 クエリパラメータでタイトルを指定し動画情報を取得する', async () => {
+      it('HTTP200 クエリパラメータでタイトルを指定し動画情報を取得する(1件)', async () => {
         const query = { title: VIDEOS_JSON[2].title };
         const res = await request.get('/videos').query(query);
         res.should.have.status(200);
         res.body.should.to.deep.equal([VIDEOS_JSON[2]]);
+      });
+      it('HTTP200 クエリパラメータでタイトルを指定し動画情報を取得する(部分一致 2件)', async () => {
+        const query = { title: 'テレビ体操' };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
+      it('HTTP200 クエリパラメータで説明文を指定し動画情報を取得する(部分一致 2件)', async () => {
+        const query = { description: '「ラジオ体操」図解' };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
+      it('HTTP200 クエリパラメータで説明文を指定し動画情報を取得する(部分一致 1件)', async () => {
+        const query = {
+          description: '広島東洋カープやサンフレッチェ広島だけじゃない',
+        };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(1);
+      });
+      it('HTTP200 クエリパラメータでlimitを指定すると指定したサイズの動画情報を取得する', async () => {
+        const query = { limit: 10 };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(10);
+      });
+      it('HTTP200 クエリパラメータでタイトルとlimitを指定すると指定したサイズのタイトルが同じ動画情報を取得する', async () => {
+        // 同じタイトルの動画を10件登録
+        const ids = [];
+        for (let i = 0; i < 10; i++) {
+          const newId = Math.random().toString();
+          ids.push(newId);
+          newVideo.multipleExists.id = newId;
+          await request.post('/videos').send(newVideo.multipleExists);
+        }
+
+        // limit指定で取得
+        const query = { title: newVideo.multipleExists.title, limit: 5 };
+        const res = await request.get('/videos').query(query);
+
+        // アサーション
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(5);
+
+        // 登録した動画情報を削除
+        for (let i = 0; i < ids.length; i++) {
+          await request.delete(`/videos/${ids[i]}`);
+        }
+      });
+      it('HTTP200 クエリパラメータでoffsetを指定すると指定した位置からの動画情報を取得する', async () => {
+        const query = { offset: 40 };
+        const res = await request.get('/videos').query(query);
+        const allVideos = await request.get('/videos');
+        res.should.have.status(200);
+        res.body.should.to.deep.equal(allVideos.body.slice(40));
+      });
+      it('HTTP200 クエリパラメータでlimitとoffsetを指定すると指定した位置から指定した件数の動画情報を取得する', async () => {
+        const query = { limit: 10, offset: 20 };
+        const res = await request.get('/videos').query(query);
+        const allVideos = await request.get('/videos');
+        res.should.have.status(200);
+        res.body.should.to.deep.equal(allVideos.body.slice(20, 30));
+      });
+      it('HTTP200 クエリパラメータでタイトルとoffsetを指定すると指定したサイズのタイトルが同じ動画情報を取得する', async () => {
+        // 同じタイトルの動画を10件登録
+        const ids = [];
+        for (let i = 0; i < 10; i++) {
+          const newId = Math.random().toString();
+          ids.push(newId);
+          newVideo.multipleExists.id = newId;
+          await request.post('/videos').send(newVideo.multipleExists);
+        }
+
+        // offset指定で取得
+        const query = { title: newVideo.multipleExists.title, offset: 3 };
+        const res = await request.get('/videos').query(query);
+
+        // アサーション
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(7);
+
+        // 登録した動画情報を削除
+        for (let i = 0; i < ids.length; i++) {
+          await request.delete(`/videos/${ids[i]}`);
+        }
+      });
+      it('HTTP200 クエリパラメータでタイトルとlimitとoffsetを指定すると指定したサイズのタイトルが同じ動画情報を取得する', async () => {
+        // 同じタイトルの動画を10件登録
+        const ids = [];
+        for (let i = 0; i < 10; i++) {
+          const newId = Math.random().toString();
+          ids.push(newId);
+          newVideo.multipleExists.id = newId;
+          await request.post('/videos').send(newVideo.multipleExists);
+        }
+
+        // limit, offset指定で取得
+        const query = {
+          title: newVideo.multipleExists.title,
+          limit: 2,
+          offset: 3,
+        };
+        const res = await request.get('/videos').query(query);
+
+        // アサーション
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+
+        // 登録した動画情報を削除
+        for (let i = 0; i < ids.length; i++) {
+          await request.delete(`/videos/${ids[i]}`);
+        }
+      });
+      it('HTTP200 クエリパラメータで再生回数(以上)を指定すると指定した再生回数以上の動画情報を取得する', async () => {
+        const query = { view_count_gt: 32420514 }; // NHKのみ2件
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
+      it('HTTP200 クエリパラメータで再生回数(未満)を指定すると指定した再生回数未満の動画情報を取得する', async () => {
+        const query = { view_count_lt: 2000 };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(5);
+      });
+      it('HTTP200 クエリパラメータで高評価数(以上)を指定すると指定した高評価数以上の動画情報を取得する', async () => {
+        const query = { like_count_gt: 118103 }; // NHKのみ1件
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(1);
+      });
+      it('HTTP200 クエリパラメータで高評価数(未満)を指定すると指定した高評価数未満の動画情報を取得する', async () => {
+        const query = { like_count_lt: 6 };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
+      it('HTTP200 クエリパラメータで動画タイトルと動画概要説明を指定するとAND条件で部分一致する動画情報を取得する', async () => {
+        const query = { title: 'ラジオ体操', description: '広島' };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
       });
       it('HTTP404 クエリパラメータでIDを指定し動画情報を取得できなかった場合ステータスコード404が返却される', async () => {
         const query = { id: newVideo.notExists.id };
