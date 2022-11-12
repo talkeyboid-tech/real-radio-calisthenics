@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { videoModel } = require('../models/video.model');
 const common = require('../common');
+// const utils = require('../util/utils');
 
 // ***** GET ***** //
 router.get('/', async (req, res) => {
@@ -27,9 +28,12 @@ router.get('/:id', async (req, res) => {
 // ***** POST ***** //
 router.post('/', async (req, res) => {
   try {
-    await videoModel.create(req.body);
-    const retUrl = `http://localhost:3000/${req.body.id}`;
-    res.status(201).json(retUrl).end();
+    const id = await videoModel.create(req.body);
+    const resourceUrl = common.generateResourceUrl(req, id);
+    res
+      .status(201)
+      .json([{ url: `${resourceUrl}` }])
+      .end();
   } catch (err) {
     if (err instanceof TypeError)
       return res.status(400).json(JSON.parse(err.message)).end();
@@ -41,9 +45,11 @@ router.post('/', async (req, res) => {
 router.patch('/:id', async (req, res) => {
   try {
     await videoModel.update(req.params.id, req.body);
-    const ret = await videoModel.getById(req.params.id);
-    if (!ret) throw new ReferenceError();
-    res.status(200).json(common.convertCamelToSnake(ret)).end();
+    const resourceUrl = common.generateResourceUrl(req);
+    res
+      .status(200)
+      .json([{ url: `${resourceUrl}` }])
+      .end();
   } catch (err) {
     if (err instanceof ReferenceError) return res.status(404).json([]).end();
     return res.status(400).json(JSON.parse(err.message)).end();

@@ -80,8 +80,9 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-                example: http://localhost:3000/videos/feSVtC1BSeQ
+                type: object
+                example:
+                  url: http://localhost:3000/videos/feSVtC1BSeQ
         400:
           description: 項目エラー
           content:
@@ -146,9 +147,9 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Video'
+                type: object
+                example:
+                  url: http://localhost:3000/videos/feSVtC1BSeQ
         400:
           description: 項目エラー
           content:

@@ -1,6 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const { setupServer } = require('../src/server');
+const ip = require('ip');
 
 // テストの前処理後処理で利用するknex
 const config = require('../knexfile');
@@ -86,6 +87,17 @@ describe('Solo API Server', () => {
         const res = await request.post('/videos').send(newVideo.correct);
         res.should.have.status(201);
       });
+      it('HTTP201 動画情報を追加すると動画リソースのURLが返却される', async () => {
+        const res = await request.post('/videos').send(newVideo.correct);
+        res.should.have.status(201);
+        res.body.should.to.be.deep.equal([
+          {
+            url: `http://${ip.address()}:${process.env.PORT || 3000}/videos/${
+              newVideo.correct.id
+            }`,
+          },
+        ]);
+      });
       it('HTTP400 動画情報を追加したがIDがない場合エラーメッセージが返却される', async () => {
         const res = await request
           .post('/videos')
@@ -107,14 +119,21 @@ describe('Solo API Server', () => {
         await knex.from(VIDEOS_TBL).where('id', newVideo.correct.id).del();
       });
 
-      it('HTTP200 動画情報を変更すると変更された動画情報が返却される', async () => {
+      it('HTTP200 動画情報を変更すると変更された動画リソースのURLが返却される', async () => {
         const expectBody = newVideo.correct;
         expectBody.title = 'テストタイトル変更後';
         const res = await request
           .patch(`/videos/${newVideo.correct.id}`)
           .send({ title: 'テストタイトル変更後' });
         res.should.have.status(200);
-        res.body.should.to.deep.equal([expectBody]);
+        // res.body.should.to.deep.equal([expectBody]);
+        res.body.should.to.be.deep.equal([
+          {
+            url: `http://${ip.address()}:${process.env.PORT || 3000}/videos/${
+              expectBody.id
+            }`,
+          },
+        ]);
       });
 
       it('HTTP400 動画情報を変更しようとしたが不正な項目が含まれている場合エラーメッセージが返却される', async () => {
