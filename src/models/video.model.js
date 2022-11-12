@@ -68,7 +68,6 @@ const videoModel = {
             sql = sql.concat(
               ` ${key} like '%${queryWithoutLimitAndOffset[key]}%'`
             );
-            // } else if (['view_count_gt', 'like_count_gt'].includes(key) > 0) {
           } else if (key.slice(-3) === '_gt') {
             sql = sql.concat(
               ` ${key.replace('_gt', '')} >= ${queryWithoutLimitAndOffset[key]}`
@@ -80,9 +79,12 @@ const videoModel = {
           } else {
             sql = sql.concat(` ${key} = '${queryWithoutLimitAndOffset[key]}'`);
           }
+          sql = sql.concat(` and`);
         }
       }
+      sql = sql.slice(0, -4); // NOTE: 最後の' and'を削除(他にいい方法あると思う)
     }
+
     sql = sql.concat(' order by id asc');
     if (existsLimit) sql = sql.concat(` limit ${query.limit}`);
     if (existsOffset) sql = sql.concat(` offset ${query.offset}`);

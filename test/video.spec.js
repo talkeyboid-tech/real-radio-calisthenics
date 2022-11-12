@@ -188,6 +188,12 @@ describe('Solo API Server', () => {
         res.should.have.status(200);
         res.body.should.to.have.lengthOf(2);
       });
+      it('HTTP200 クエリパラメータで動画タイトルと動画概要説明を指定するとAND条件で部分一致する動画情報を取得する', async () => {
+        const query = { title: 'ラジオ体操', description: '広島' };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
       it('HTTP404 クエリパラメータでIDを指定し動画情報を取得できなかった場合ステータスコード404が返却される', async () => {
         const query = { id: newVideo.notExists.id };
         const res = await request.get('/videos').query(query);
