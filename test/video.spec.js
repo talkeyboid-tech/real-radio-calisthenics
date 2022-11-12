@@ -164,6 +164,30 @@ describe('Solo API Server', () => {
           await request.delete(`/videos/${ids[i]}`);
         }
       });
+      it('HTTP200 クエリパラメータで再生回数(以上)を指定すると指定した再生回数以上の動画情報を取得する', async () => {
+        const query = { view_count_gt: 32420514 }; // NHKのみ2件
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
+      it('HTTP200 クエリパラメータで再生回数(未満)を指定すると指定した再生回数未満の動画情報を取得する', async () => {
+        const query = { view_count_lt: 2000 };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(5);
+      });
+      it('HTTP200 クエリパラメータで高評価数(以上)を指定すると指定した高評価数以上の動画情報を取得する', async () => {
+        const query = { like_count_gt: 118103 }; // NHKのみ1件
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(1);
+      });
+      it('HTTP200 クエリパラメータで高評価数(未満)を指定すると指定した高評価数未満の動画情報を取得する', async () => {
+        const query = { like_count_lt: 6 };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
       it('HTTP404 クエリパラメータでIDを指定し動画情報を取得できなかった場合ステータスコード404が返却される', async () => {
         const query = { id: newVideo.notExists.id };
         const res = await request.get('/videos').query(query);

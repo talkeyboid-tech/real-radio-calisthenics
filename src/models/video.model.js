@@ -68,6 +68,15 @@ const videoModel = {
             sql = sql.concat(
               ` ${key} like '%${queryWithoutLimitAndOffset[key]}%'`
             );
+            // } else if (['view_count_gt', 'like_count_gt'].includes(key) > 0) {
+          } else if (key.slice(-3) === '_gt') {
+            sql = sql.concat(
+              ` ${key.replace('_gt', '')} >= ${queryWithoutLimitAndOffset[key]}`
+            );
+          } else if (key.slice(-3) === '_lt') {
+            sql = sql.concat(
+              ` ${key.replace('_lt', '')} < ${queryWithoutLimitAndOffset[key]}`
+            );
           } else {
             sql = sql.concat(` ${key} = '${queryWithoutLimitAndOffset[key]}'`);
           }
