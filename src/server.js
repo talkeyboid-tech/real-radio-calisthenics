@@ -7,6 +7,7 @@ const setupServer = () => {
   const app = express();
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+  app.use('/', express.static(`${__dirname}/public`));
 
   const videosRouter = require('./routes/videos');
   app.use('/videos', videosRouter);

@@ -9,6 +9,7 @@
     "mocha": true
   },
   "plugins": ["prettier"],
+  "ignorePatterns": ["src/public/*.js"],
   "rules": {
     "prettier/prettier": "error",
     "no-console": 0
