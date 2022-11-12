@@ -1,5 +1,5 @@
 const _ = require('lodash');
-
+const utils = require('../util/utils');
 /**
  * オブジェクトキー変換（camel to snake)
  *
@@ -18,6 +18,23 @@ const convertCamelToSnake = (arg) => {
   return retArr.length > 0 ? retArr : retArr[0];
 };
 
+/**
+ * リソースURL文字列生成
+ *
+ * @param {object} req - express req
+ * @param {string} resourceId - リソースID(PATCHなどreq.originalUrlにIDを含む場合は省略)
+ * @returns リソースURL文字列
+ */
+const generateResourceUrl = (req, resourceId = undefined) => {
+  const { protocol, originalUrl } = req;
+  const host = utils.getHost();
+  const port = utils.getPort();
+  return resourceId
+    ? `${protocol}://${host}:${port}${originalUrl}/${resourceId}`
+    : `${protocol}://${host}:${port}${originalUrl}`;
+};
+
 module.exports = {
   convertCamelToSnake,
+  generateResourceUrl,
 };

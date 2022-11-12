@@ -60,8 +60,9 @@ const videoModel = {
     return new Promise((resolve) => {
       knex(VIDEOS_TBL)
         .insert(obj)
+        .returning('id')
         .then((res) => {
-          resolve(res);
+          resolve(res[0].id);
         });
     });
   },
@@ -85,7 +86,7 @@ const videoModel = {
         .update(obj)
         .returning('id')
         .then((res) => {
-          resolve(res[0]);
+          resolve(res[0].id);
         })
         .catch((err) => {
           reject(err);

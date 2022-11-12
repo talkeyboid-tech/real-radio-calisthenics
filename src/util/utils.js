@@ -1,3 +1,5 @@
+const ip = require('ip');
+
 /**
  * 整数文字列判定
  * ex) "12" -> true, "012" -> true, "01a" -> false
@@ -23,7 +25,27 @@ const convertToArray = (arg) => {
   return Array.isArray(arg) ? arg : [arg];
 };
 
+/**
+ * ホストIP取得
+ *
+ * @returns {string} HOST IP
+ */
+const getHost = () => {
+  return ip.address();
+};
+
+/**
+ * ホストポート取得
+ *
+ * @returns {number} HOST PORT
+ */
+const getPort = () => {
+  return process.env.PORT || 3000;
+};
+
 module.exports = {
   isIntString,
   convertToArray,
+  getHost,
+  getPort,
 };
