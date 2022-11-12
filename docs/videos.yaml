@@ -43,7 +43,18 @@ paths:
     get:
       tags: ['videos']
       summary: ラジオ体操動画情報一覧取得
-      description: ラジオ動画情報一覧を取得する
+      description: "ラジオ動画情報一覧を取得する。\n\nクエリパラメータ\n\n - 指定なし: 全件取得\n\n- 指定あり: AND条件で実行"
+      parameters:
+        - in: query
+          name: id
+          description: 動画ID
+          schema:
+            type: string
+        - in: query
+          name: title
+          description: 動画タイトル
+          schema:
+            type: string
       responses:
         200:
           description: 成功時
