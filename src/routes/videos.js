@@ -3,6 +3,7 @@ const router = express.Router();
 const { videoModel } = require('../models/video.model');
 const common = require('../common');
 
+// ***** GET ***** //
 router.get('/', async (req, res) => {
   // クエリパラメータが指定された場合、検索
   if (Object.keys(req.query).length) {
@@ -23,6 +24,7 @@ router.get('/:id', async (req, res) => {
     : res.status(200).json(common.convertCamelToSnake(ret)).end();
 });
 
+// ***** POST ***** //
 router.post('/', async (req, res) => {
   try {
     await videoModel.create(req.body);
@@ -35,6 +37,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// ***** PATCH ***** //
 router.patch('/:id', async (req, res) => {
   try {
     await videoModel.update(req.params.id, req.body);
@@ -47,6 +50,7 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
+// ***** DELETE ***** //
 router.delete('/:id', async (req, res) => {
   const ret = await videoModel.remove(req.params.id);
   return ret > 0 ? res.status(204).end() : res.status(404).json([]).end();

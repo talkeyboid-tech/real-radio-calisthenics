@@ -1,8 +1,8 @@
 const knex = require('../knex');
 const VIDEOS_TBL = 'videos';
 
+// バリデーション設定
 const { validProps, requiredProps } = require('../util/validation');
-
 const validateProps = validProps([
   'id',
   'title',
@@ -10,7 +10,6 @@ const validateProps = validProps([
   'view_count',
   'like_count',
 ]);
-
 const validateRequired = requiredProps(['id', 'title']);
 
 const videoModel = {

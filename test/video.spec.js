@@ -1,6 +1,5 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-// const expect = require('chai').expect;
 const { setupServer } = require('../src/server');
 
 // テストの前処理後処理で利用するknex
@@ -10,21 +9,22 @@ const knex = require('../src/knex')(config);
 // モデル読込
 const { VIDEOS_TBL } = require('../src/models/video.model');
 
-// 期待データ読込
+// データ読込
+// 期待値データ（全件）
 const VIDEOS_JSON = require('./videosTableForTest.json');
+// テスト利用データ
+const fixtures = require('./video.fixtures');
 
 chai.use(chaiHttp);
 chai.should();
 
-const NEW_IDS = ['XXX', 'YYY', 'ZZZ'];
-const NOT_EXIST_IDS = ['AAA', 'BBB', 'CCC'];
-const NOT_EXIST_TITLES = ['nt8BjJ8Y8s8u', 'JtEy3YCMDt4V', 'Pkc7BMHtuL8F'];
-
 describe('Solo API Server', () => {
   let request;
+  let newVideo;
   beforeEach(() => {
     const server = setupServer();
     request = chai.request(server).keepOpen();
+    newVideo = fixtures.getNewVideo();
   });
 
   afterEach(() => {
@@ -51,13 +51,13 @@ describe('Solo API Server', () => {
         res.body.should.to.deep.equal([VIDEOS_JSON[2]]);
       });
       it('HTTP404 クエリパラメータでIDを指定し動画情報を取得できなかった場合ステータスコード404が返却される', async () => {
-        const query = { id: NOT_EXIST_IDS[0] };
+        const query = { id: newVideo.notExists.id };
         const res = await request.get('/videos').query(query);
         res.should.have.status(404);
         res.body.should.to.deep.equal([]);
       });
       it('HTTP404 クエリパラメータでタイトルを指定し動画情報を取得できなかった場合ステータスコード404が返却される', async () => {
-        const query = { title: NOT_EXIST_TITLES[0] };
+        const query = { title: newVideo.notExists.title };
         const res = await request.get('/videos').query(query);
         res.should.have.status(404);
         res.body.should.to.deep.equal([]);
@@ -79,26 +79,17 @@ describe('Solo API Server', () => {
 
     describe('POST /', () => {
       afterEach(async () => {
-        await knex.from(VIDEOS_TBL).where('id', '=', NEW_IDS[0]).del();
+        await knex.from(VIDEOS_TBL).where('id', '=', newVideo.correct.id).del();
       });
 
       it('HTTP201 動画情報を追加するとステータスコード201が返却される', async () => {
-        const res = await request.post('/videos').send({
-          id: NEW_IDS[0],
-          title: 'テストタイトル',
-          description: 'テスト詳細',
-          view_count: 10,
-          like_count: 20,
-        });
+        const res = await request.post('/videos').send(newVideo.correct);
         res.should.have.status(201);
       });
       it('HTTP400 動画情報を追加したがIDがない場合エラーメッセージが返却される', async () => {
-        const res = await request.post('/videos').send({
-          title: 'テストタイトル',
-          description: 'テスト詳細',
-          view_count: 10,
-          like_count: 20,
-        });
+        const res = await request
+          .post('/videos')
+          .send(newVideo.noRequiredProps);
         res.should.have.status(400);
         res.body.should.to.deep.equal({
           message: '必須項目がありません',
@@ -109,38 +100,25 @@ describe('Solo API Server', () => {
 
     describe('PATCH /:id', () => {
       beforeEach(async () => {
-        await knex
-          .insert({
-            id: NEW_IDS[0],
-            title: 'テストタイトル',
-            description: 'テスト詳細',
-            view_count: 10,
-            like_count: 20,
-          })
-          .into(VIDEOS_TBL);
+        await knex.insert(newVideo.correct).into(VIDEOS_TBL);
       });
 
       afterEach(async () => {
-        await knex.from(VIDEOS_TBL).where('id', NEW_IDS[0]).del();
+        await knex.from(VIDEOS_TBL).where('id', newVideo.correct.id).del();
       });
 
       it('HTTP200 動画情報を変更すると変更された動画情報が返却される', async () => {
-        const expectBody = {
-          id: NEW_IDS[0],
-          title: 'テストタイトル変更後',
-          description: 'テスト詳細',
-          view_count: 10,
-          like_count: 20,
-        };
+        const expectBody = newVideo.correct;
+        expectBody.title = 'テストタイトル変更後';
         const res = await request
-          .patch(`/videos/${NEW_IDS[0]}`)
+          .patch(`/videos/${newVideo.correct.id}`)
           .send({ title: 'テストタイトル変更後' });
         res.should.have.status(200);
         res.body.should.to.deep.equal([expectBody]);
       });
 
       it('HTTP400 動画情報を変更しようとしたが不正な項目が含まれている場合エラーメッセージが返却される', async () => {
-        const res = await request.patch(`/videos/${NEW_IDS[0]}`).send({
+        const res = await request.patch(`/videos/${newVideo.correct.id}`).send({
           title: 'テストタイトル変更後',
           invalid: 'this is invalid',
         });
@@ -154,24 +132,16 @@ describe('Solo API Server', () => {
 
     describe('DELETE /:id', () => {
       before(async () => {
-        await knex
-          .insert({
-            id: NEW_IDS[0],
-            title: 'テストタイトル',
-            description: 'テスト詳細',
-            view_count: 10,
-            like_count: 20,
-          })
-          .into(VIDEOS_TBL);
+        await knex.insert(newVideo.correct).into(VIDEOS_TBL);
       });
 
       it('HTTP204 動画情報を削除するとステータスコード204が返却される', async () => {
-        const res = await request.delete(`/videos/${NEW_IDS[0]}`);
+        const res = await request.delete(`/videos/${newVideo.correct.id}`);
         res.should.have.status(204);
       });
 
       it('HTTP404 削除対象の動画情報がなかった場合ステータスコード404が返却される', async () => {
-        const res = await request.delete(`/videos/${NEW_IDS[1]}`);
+        const res = await request.delete(`/videos/${newVideo.notExists.id}`);
         res.should.have.status(404);
       });
     });

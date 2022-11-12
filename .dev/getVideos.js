@@ -3,7 +3,7 @@ require('dotenv').config({
   path: './.env.local',
 });
 
-// ラジオ体操URL
+// ラジオ体操ID一覧（Youtube ID）
 const videoIds = [
   'feSVtC1BSeQ',
   'dzQIMo-Xvyg',
