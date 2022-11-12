@@ -56,6 +56,13 @@ paths:
           schema:
             type: number
         - in: query
+          name: random
+          description: ランダムに動画を取得
+          schema:
+            type: string
+            enum:
+              - true
+        - in: query
           name: id
           description: 動画ID（完全一致）
           schema:

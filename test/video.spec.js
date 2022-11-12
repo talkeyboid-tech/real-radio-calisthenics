@@ -194,6 +194,28 @@ describe('Solo API Server', () => {
         res.should.have.status(200);
         res.body.should.to.have.lengthOf(2);
       });
+      it('HTTP200 クエリパラメータでlimitとランダムを指定するとランダムな動画情報を指定した件数分取得する', async () => {
+        const query1 = { limit: 2, random: true };
+        const res1 = await request.get('/videos').query(query1);
+        const query2 = { limit: 2, random: true };
+        const res2 = await request.get('/videos').query(query2);
+        res1.should.have.status(200);
+        res1.body.should.to.have.lengthOf(2);
+        res2.should.have.status(200);
+        res2.body.should.to.have.lengthOf(2);
+        res1.body.should.to.not.deep.equal(res2.body);
+      });
+      it('HTTP200 クエリパラメータでlimitとランダムとタイトルを指定するとランダムで指定したタイトルを含む動画情報を指定した件数分取得する', async () => {
+        const query1 = { title: 'ラジオ体操', limit: 3, random: true };
+        const res1 = await request.get('/videos').query(query1);
+        const query2 = { title: 'ラジオ体操', limit: 3, random: true };
+        const res2 = await request.get('/videos').query(query2);
+        res1.should.have.status(200);
+        res1.body.should.to.have.lengthOf(3);
+        res2.should.have.status(200);
+        res2.body.should.to.have.lengthOf(3);
+        res1.body.should.to.not.deep.equal(res2.body);
+      });
       it('HTTP404 クエリパラメータでIDを指定し動画情報を取得できなかった場合ステータスコード404が返却される', async () => {
         const query = { id: newVideo.notExists.id };
         const res = await request.get('/videos').query(query);
