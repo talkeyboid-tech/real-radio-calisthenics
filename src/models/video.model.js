@@ -12,8 +12,9 @@ const validateProps = validProps([
 ]);
 const validateRequired = requiredProps(['id', 'title']);
 
+// TODO: selectのオブジェクトは共通化する
 const videoModel = {
-  getAll(limit = 100) {
+  getAll(limit = 1000) {
     return knex
       .select({
         id: 'id',
@@ -42,17 +43,128 @@ const videoModel = {
   },
 
   getByQuery(query) {
-    return knex
-      .select({
-        id: 'id',
-        title: 'title',
-        description: 'description',
-        viewCount: 'view_count',
-        likeCount: 'like_count',
-      })
-      .from(VIDEOS_TBL)
-      .where(query)
-      .first();
+    // limitとoffset以外のクエリを取得
+    const queryWithoutLimitAndOffset = {};
+    Object.assign(queryWithoutLimitAndOffset, query);
+    delete queryWithoutLimitAndOffset.limit;
+    delete queryWithoutLimitAndOffset.offset;
+
+    // 分岐フラグ
+    const existsLimit = !!query.limit;
+    const existsOffset = !!query.offset;
+    const existsWithoutLimitAndOffset = !!Object.keys(
+      queryWithoutLimitAndOffset
+    ).length;
+
+    // limitのみ
+    if (existsLimit && !existsOffset && !existsWithoutLimitAndOffset) {
+      return knex
+        .select({
+          id: 'id',
+          title: 'title',
+          description: 'description',
+          viewCount: 'view_count',
+          likeCount: 'like_count',
+        })
+        .from(VIDEOS_TBL)
+        .limit(query.limit)
+        .orderBy('id', 'asc');
+    }
+
+    // offsetのみ
+    if (!existsLimit && existsOffset && !existsWithoutLimitAndOffset) {
+      return knex
+        .select({
+          id: 'id',
+          title: 'title',
+          description: 'description',
+          viewCount: 'view_count',
+          likeCount: 'like_count',
+        })
+        .from(VIDEOS_TBL)
+        .offset(query.offset)
+        .orderBy('id', 'asc');
+    }
+
+    // 他のクエリのみ
+    if (!existsLimit && !existsOffset && existsWithoutLimitAndOffset) {
+      return knex
+        .select({
+          id: 'id',
+          title: 'title',
+          description: 'description',
+          viewCount: 'view_count',
+          likeCount: 'like_count',
+        })
+        .from(VIDEOS_TBL)
+        .where(query)
+        .first();
+    }
+
+    // limitとoffset
+    if (existsLimit && existsOffset && !existsWithoutLimitAndOffset) {
+      return knex
+        .select({
+          id: 'id',
+          title: 'title',
+          description: 'description',
+          viewCount: 'view_count',
+          likeCount: 'like_count',
+        })
+        .from(VIDEOS_TBL)
+        .limit(query.limit)
+        .offset(query.offset)
+        .orderBy('id', 'asc');
+    }
+
+    // limitと他のクエリ
+    if (existsLimit && !existsOffset && existsWithoutLimitAndOffset) {
+      return knex
+        .select({
+          id: 'id',
+          title: 'title',
+          description: 'description',
+          viewCount: 'view_count',
+          likeCount: 'like_count',
+        })
+        .from(VIDEOS_TBL)
+        .limit(query.limit)
+        .where(queryWithoutLimitAndOffset)
+        .orderBy('id', 'asc');
+    }
+
+    // offsetと他のクエリ
+    if (!existsLimit && existsOffset && existsWithoutLimitAndOffset) {
+      return knex
+        .select({
+          id: 'id',
+          title: 'title',
+          description: 'description',
+          viewCount: 'view_count',
+          likeCount: 'like_count',
+        })
+        .from(VIDEOS_TBL)
+        .offset(query.offset)
+        .where(queryWithoutLimitAndOffset)
+        .orderBy('id', 'asc');
+    }
+
+    // 全部
+    if (existsLimit && existsOffset && existsWithoutLimitAndOffset) {
+      return knex
+        .select({
+          id: 'id',
+          title: 'title',
+          description: 'description',
+          viewCount: 'view_count',
+          likeCount: 'like_count',
+        })
+        .from(VIDEOS_TBL)
+        .limit(query.limit)
+        .offset(query.offset)
+        .where(queryWithoutLimitAndOffset)
+        .orderBy('id', 'asc');
+    }
   },
 
   create(obj) {

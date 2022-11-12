@@ -51,6 +51,108 @@ describe('Solo API Server', () => {
         res.should.have.status(200);
         res.body.should.to.deep.equal([VIDEOS_JSON[2]]);
       });
+      it('HTTP200 クエリパラメータでlimitを指定すると指定したサイズの動画情報を取得する', async () => {
+        const query = { limit: 10 };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(10);
+      });
+      it('HTTP200 クエリパラメータでタイトルとlimitを指定すると指定したサイズのタイトルが同じ動画情報を取得する', async () => {
+        // 同じタイトルの動画を10件登録
+        const ids = [];
+        for (let i = 0; i < 10; i++) {
+          const newId = Math.random().toString();
+          ids.push(newId);
+          newVideo.multipleExists.id = newId;
+          await request.post('/videos').send(newVideo.multipleExists);
+        }
+
+        // limit指定で取得
+        const query = { title: newVideo.multipleExists.title, limit: 5 };
+        const res = await request.get('/videos').query(query);
+
+        // アサーション
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(5);
+
+        // 登録した動画情報を削除
+        for (let i = 0; i < ids.length; i++) {
+          await request.delete(`/videos/${ids[i]}`);
+        }
+      });
+      it('HTTP200 クエリパラメータでoffsetを指定すると指定した位置からの動画情報を取得する', async () => {
+        const query = { offset: 40 };
+        const res = await request.get('/videos').query(query);
+        const allVideos = await request.get('/videos');
+        res.should.have.status(200);
+        res.body.should.to.deep.equal(allVideos.body.slice(40));
+      });
+      it('HTTP200 クエリパラメータでlimitとoffsetを指定すると指定した位置から指定した件数の動画情報を取得する', async () => {
+        const query = { limit: 10, offset: 20 };
+        const res = await request.get('/videos').query(query);
+        const allVideos = await request.get('/videos');
+        res.should.have.status(200);
+        res.body.should.to.deep.equal(allVideos.body.slice(20, 30));
+      });
+      it('HTTP200 クエリパラメータでタイトルとoffsetを指定すると指定したサイズのタイトルが同じ動画情報を取得する', async () => {
+        // 同じタイトルの動画を10件登録
+        const ids = [];
+        for (let i = 0; i < 10; i++) {
+          const newId = Math.random().toString();
+          ids.push(newId);
+          newVideo.multipleExists.id = newId;
+          await request.post('/videos').send(newVideo.multipleExists);
+        }
+
+        // offset指定で取得
+        const query = { title: newVideo.multipleExists.title, offset: 3 };
+        const res = await request.get('/videos').query(query);
+
+        // アサーション
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(7);
+
+        // 登録した動画情報を削除
+        for (let i = 0; i < ids.length; i++) {
+          await request.delete(`/videos/${ids[i]}`);
+        }
+      });
+      it('HTTP200 クエリパラメータでタイトルとlimitとoffsetを指定すると指定したサイズのタイトルが同じ動画情報を取得する', async () => {
+        // 同じタイトルの動画を10件登録
+        const ids = [];
+        for (let i = 0; i < 10; i++) {
+          const newId = Math.random().toString();
+          ids.push(newId);
+          newVideo.multipleExists.id = newId;
+          await request.post('/videos').send(newVideo.multipleExists);
+        }
+
+        // limit, offset指定で取得
+        const query = {
+          title: newVideo.multipleExists.title,
+          limit: 2,
+          offset: 3,
+        };
+        const res = await request.get('/videos').query(query);
+
+        // アサーション
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+
+        // 登録した動画情報を削除
+        for (let i = 0; i < ids.length; i++) {
+          await request.delete(`/videos/${ids[i]}`);
+        }
+      });
+      xit('HTTP200 クエリパラメータで動画説明文を指定すると動画説明文の部分一致で動画情報を取得する', async () => {
+        const query = {
+          description: '広島東洋カープやサンフレッチェ広島だけじゃない',
+        };
+        const res = await request.get('/videos').query(query);
+        const allVideos = await request.get('/videos');
+        res.should.have.status(200);
+        res.body.should.to.deep.equal(allVideos.body.slice(20, 30));
+      });
       it('HTTP404 クエリパラメータでIDを指定し動画情報を取得できなかった場合ステータスコード404が返却される', async () => {
         const query = { id: newVideo.notExists.id };
         const res = await request.get('/videos').query(query);

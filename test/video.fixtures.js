@@ -29,6 +29,13 @@ module.exports = {
         view_count: 10,
         like_count: 20,
       },
+      multipleExists: {
+        id: 'this id will be replaced',
+        title: '複数存在するテストタイトル',
+        description: 'テスト詳細',
+        view_count: 10,
+        like_count: 20,
+      },
     };
   },
 };
