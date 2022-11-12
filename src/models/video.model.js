@@ -44,16 +44,18 @@ const videoModel = {
 
   getByQuery(query) {
     // limitとoffset以外のクエリを取得
-    const queryWithoutLimitAndOffset = {};
-    Object.assign(queryWithoutLimitAndOffset, query);
-    delete queryWithoutLimitAndOffset.limit;
-    delete queryWithoutLimitAndOffset.offset;
+    const queryWithoutLimitOffsetRandom = {};
+    Object.assign(queryWithoutLimitOffsetRandom, query);
+    delete queryWithoutLimitOffsetRandom.limit;
+    delete queryWithoutLimitOffsetRandom.offset;
+    delete queryWithoutLimitOffsetRandom.random;
 
     // 分岐判定フラグ
     const existsLimit = !!query.limit;
     const existsOffset = !!query.offset;
+    const existsRandom = !!query.random;
     const existsWithoutLimitAndOffset = !!Object.keys(
-      queryWithoutLimitAndOffset
+      queryWithoutLimitOffsetRandom
     ).length;
 
     // SQL文生成
@@ -61,23 +63,29 @@ const videoModel = {
     // WHERE句作成
     if (existsWithoutLimitAndOffset) {
       sql = sql.concat(` where`);
-      for (const key in queryWithoutLimitAndOffset) {
-        if (Object.hasOwnProperty.call(queryWithoutLimitAndOffset, key)) {
+      for (const key in queryWithoutLimitOffsetRandom) {
+        if (Object.hasOwnProperty.call(queryWithoutLimitOffsetRandom, key)) {
           // LIKE検索
           if (['title', 'description'].includes(key)) {
             sql = sql.concat(
-              ` ${key} like '%${queryWithoutLimitAndOffset[key]}%'`
+              ` ${key} like '%${queryWithoutLimitOffsetRandom[key]}%'`
             );
           } else if (key.slice(-3) === '_gt') {
             sql = sql.concat(
-              ` ${key.replace('_gt', '')} >= ${queryWithoutLimitAndOffset[key]}`
+              ` ${key.replace('_gt', '')} >= ${
+                queryWithoutLimitOffsetRandom[key]
+              }`
             );
           } else if (key.slice(-3) === '_lt') {
             sql = sql.concat(
-              ` ${key.replace('_lt', '')} < ${queryWithoutLimitAndOffset[key]}`
+              ` ${key.replace('_lt', '')} < ${
+                queryWithoutLimitOffsetRandom[key]
+              }`
             );
           } else {
-            sql = sql.concat(` ${key} = '${queryWithoutLimitAndOffset[key]}'`);
+            sql = sql.concat(
+              ` ${key} = '${queryWithoutLimitOffsetRandom[key]}'`
+            );
           }
           sql = sql.concat(` and`);
         }
@@ -85,7 +93,12 @@ const videoModel = {
       sql = sql.slice(0, -4); // NOTE: 最後の' and'を削除(他にいい方法あると思う)
     }
 
-    sql = sql.concat(' order by id asc');
+    // ORDER BY 句生成
+    if (existsRandom && query.random === 'true') {
+      sql = sql.concat(' order by random()');
+    } else {
+      sql = sql.concat(' order by id asc');
+    }
     if (existsLimit) sql = sql.concat(` limit ${query.limit}`);
     if (existsOffset) sql = sql.concat(` offset ${query.offset}`);
 
