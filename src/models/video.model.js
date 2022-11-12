@@ -49,122 +49,40 @@ const videoModel = {
     delete queryWithoutLimitAndOffset.limit;
     delete queryWithoutLimitAndOffset.offset;
 
-    // 分岐フラグ
+    // 分岐判定フラグ
     const existsLimit = !!query.limit;
     const existsOffset = !!query.offset;
     const existsWithoutLimitAndOffset = !!Object.keys(
       queryWithoutLimitAndOffset
     ).length;
 
-    // limitのみ
-    if (existsLimit && !existsOffset && !existsWithoutLimitAndOffset) {
-      return knex
-        .select({
-          id: 'id',
-          title: 'title',
-          description: 'description',
-          viewCount: 'view_count',
-          likeCount: 'like_count',
-        })
-        .from(VIDEOS_TBL)
-        .limit(query.limit)
-        .orderBy('id', 'asc');
+    // SQL文生成
+    let sql = `select * from ${VIDEOS_TBL}`;
+    // WHERE句作成
+    if (existsWithoutLimitAndOffset) {
+      sql = sql.concat(` where`);
+      for (const key in queryWithoutLimitAndOffset) {
+        if (Object.hasOwnProperty.call(queryWithoutLimitAndOffset, key)) {
+          // LIKE検索
+          if (['title', 'description'].includes(key)) {
+            sql = sql.concat(
+              ` ${key} like '%${queryWithoutLimitAndOffset[key]}%'`
+            );
+          } else {
+            sql = sql.concat(` ${key} = '${queryWithoutLimitAndOffset[key]}'`);
+          }
+        }
+      }
     }
+    sql = sql.concat(' order by id asc');
+    if (existsLimit) sql = sql.concat(` limit ${query.limit}`);
+    if (existsOffset) sql = sql.concat(` offset ${query.offset}`);
 
-    // offsetのみ
-    if (!existsLimit && existsOffset && !existsWithoutLimitAndOffset) {
-      return knex
-        .select({
-          id: 'id',
-          title: 'title',
-          description: 'description',
-          viewCount: 'view_count',
-          likeCount: 'like_count',
-        })
-        .from(VIDEOS_TBL)
-        .offset(query.offset)
-        .orderBy('id', 'asc');
-    }
-
-    // 他のクエリのみ
-    if (!existsLimit && !existsOffset && existsWithoutLimitAndOffset) {
-      return knex
-        .select({
-          id: 'id',
-          title: 'title',
-          description: 'description',
-          viewCount: 'view_count',
-          likeCount: 'like_count',
-        })
-        .from(VIDEOS_TBL)
-        .where(query)
-        .first();
-    }
-
-    // limitとoffset
-    if (existsLimit && existsOffset && !existsWithoutLimitAndOffset) {
-      return knex
-        .select({
-          id: 'id',
-          title: 'title',
-          description: 'description',
-          viewCount: 'view_count',
-          likeCount: 'like_count',
-        })
-        .from(VIDEOS_TBL)
-        .limit(query.limit)
-        .offset(query.offset)
-        .orderBy('id', 'asc');
-    }
-
-    // limitと他のクエリ
-    if (existsLimit && !existsOffset && existsWithoutLimitAndOffset) {
-      return knex
-        .select({
-          id: 'id',
-          title: 'title',
-          description: 'description',
-          viewCount: 'view_count',
-          likeCount: 'like_count',
-        })
-        .from(VIDEOS_TBL)
-        .limit(query.limit)
-        .where(queryWithoutLimitAndOffset)
-        .orderBy('id', 'asc');
-    }
-
-    // offsetと他のクエリ
-    if (!existsLimit && existsOffset && existsWithoutLimitAndOffset) {
-      return knex
-        .select({
-          id: 'id',
-          title: 'title',
-          description: 'description',
-          viewCount: 'view_count',
-          likeCount: 'like_count',
-        })
-        .from(VIDEOS_TBL)
-        .offset(query.offset)
-        .where(queryWithoutLimitAndOffset)
-        .orderBy('id', 'asc');
-    }
-
-    // 全部
-    if (existsLimit && existsOffset && existsWithoutLimitAndOffset) {
-      return knex
-        .select({
-          id: 'id',
-          title: 'title',
-          description: 'description',
-          viewCount: 'view_count',
-          likeCount: 'like_count',
-        })
-        .from(VIDEOS_TBL)
-        .limit(query.limit)
-        .offset(query.offset)
-        .where(queryWithoutLimitAndOffset)
-        .orderBy('id', 'asc');
-    }
+    // SQL実行
+    return knex.raw(sql).then((res) => {
+      if (res.rows.length === 0) return undefined;
+      return res.rows;
+    });
   },
 
   create(obj) {

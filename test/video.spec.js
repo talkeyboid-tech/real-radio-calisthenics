@@ -45,11 +45,31 @@ describe('Solo API Server', () => {
         res.should.have.status(200);
         res.body.should.to.deep.equal([VIDEOS_JSON[2]]);
       });
-      it('HTTP200 クエリパラメータでタイトルを指定し動画情報を取得する', async () => {
+      it('HTTP200 クエリパラメータでタイトルを指定し動画情報を取得する(1件)', async () => {
         const query = { title: VIDEOS_JSON[2].title };
         const res = await request.get('/videos').query(query);
         res.should.have.status(200);
         res.body.should.to.deep.equal([VIDEOS_JSON[2]]);
+      });
+      it('HTTP200 クエリパラメータでタイトルを指定し動画情報を取得する(部分一致 2件)', async () => {
+        const query = { title: 'テレビ体操' };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
+      it('HTTP200 クエリパラメータで説明文を指定し動画情報を取得する(部分一致 2件)', async () => {
+        const query = { description: '「ラジオ体操」図解' };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(2);
+      });
+      it('HTTP200 クエリパラメータで説明文を指定し動画情報を取得する(部分一致 1件)', async () => {
+        const query = {
+          description: '広島東洋カープやサンフレッチェ広島だけじゃない',
+        };
+        const res = await request.get('/videos').query(query);
+        res.should.have.status(200);
+        res.body.should.to.have.lengthOf(1);
       });
       it('HTTP200 クエリパラメータでlimitを指定すると指定したサイズの動画情報を取得する', async () => {
         const query = { limit: 10 };
@@ -143,15 +163,6 @@ describe('Solo API Server', () => {
         for (let i = 0; i < ids.length; i++) {
           await request.delete(`/videos/${ids[i]}`);
         }
-      });
-      xit('HTTP200 クエリパラメータで動画説明文を指定すると動画説明文の部分一致で動画情報を取得する', async () => {
-        const query = {
-          description: '広島東洋カープやサンフレッチェ広島だけじゃない',
-        };
-        const res = await request.get('/videos').query(query);
-        const allVideos = await request.get('/videos');
-        res.should.have.status(200);
-        res.body.should.to.deep.equal(allVideos.body.slice(20, 30));
       });
       it('HTTP404 クエリパラメータでIDを指定し動画情報を取得できなかった場合ステータスコード404が返却される', async () => {
         const query = { id: newVideo.notExists.id };
