@@ -60,7 +60,9 @@ npm run dev
 
 ### 🛝 Playground
 
-[ルートURL](http://localhost:3000/) へアクセスすることで画面サンプルを見ることができます。
+[ルート URL](http://localhost:3000/) へアクセスすることで画面サンプルを見ることができます。
+
+> Chrome では動画の読み込みが遅くなる可能性があります。
 
 ## 👮‍♂️ Our Policy
 
