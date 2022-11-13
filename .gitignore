@@ -106,3 +106,4 @@ dist
 
 # 開発のための個人的なファイル
 .note.md
+.DS_Store
