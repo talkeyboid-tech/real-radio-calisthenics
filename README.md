@@ -1,6 +1,28 @@
 ![logo](./docs/assets/logo.png)
 
-<p align="center"><img src="https://img.shields.io/badge/org-hippopotamus-brightgreen"><img src="https://img.shields.io/github/license/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/languages/code-size/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/languages/top/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/issues/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/issues-closed-raw/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/last-commit/yoshihiro-maeda-cc/nri-3-api-solo-demo"></p>
+<p align="center">
+    <a href="" target="_blank">
+        <img src="https://img.shields.io/github/license/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="GitHub license">
+    </a>
+    <a href="" target="_blank">
+        <img src="https://img.shields.io/badge/org-hippopotamus-brightgreen" alt="Organization">
+    </a>
+    <a href="" target="_blank">
+        <img src="https://img.shields.io/github/languages/code-size/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Code Size">
+    </a>
+    <a href="" target="_blank">
+        <img src="https://img.shields.io/github/languages/top/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Language Top">
+    </a>
+    <a href="" target="_blank">
+        <img src="https://img.shields.io/github/issues/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Issues">
+    </a>
+    <a href="" target="_blank">
+        <img src="https://img.shields.io/github/issues-closed-raw/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Issues Closed">
+    </a>
+    <a href="" target="_blank">
+        <img src="https://img.shields.io/github/last-commit/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Last Commit">
+    </a>
+</p>
 
 > ⚠️ これは完全なるジョークプロジェクトです。書いてあることを決して鵜呑みにしないでください。
 
