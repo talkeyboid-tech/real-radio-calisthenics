@@ -2,25 +2,25 @@
 
 <p align="center">
     <a href="LICENSE" target="_blank">
-        <img src="https://img.shields.io/github/license/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="GitHub license">
+        <img src="https://img.shields.io/github/license/yoshihiro-maeda-cc/real-radio-calisthenics" alt="GitHub license">
     </a>
     <a href="https://en.wikipedia.org/wiki/Hippopotamus" target="_blank">
         <img src="https://img.shields.io/badge/org-hippopotamus-brightgreen" alt="Organization">
     </a>
-    <a href="https://github.com/yoshihiro-maeda-cc/nri-3-api-solo-demo" target="_blank">
-        <img src="https://img.shields.io/github/languages/code-size/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Code Size">
+    <a href="https://github.com/yoshihiro-maeda-cc/real-radio-calisthenics" target="_blank">
+        <img src="https://img.shields.io/github/languages/code-size/yoshihiro-maeda-cc/real-radio-calisthenics" alt="Code Size">
     </a>
-    <a href="https://github.com/yoshihiro-maeda-cc/nri-3-api-solo-demo/search?l=javascript" target="_blank">
-        <img src="https://img.shields.io/github/languages/top/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Language Top">
+    <a href="https://github.com/yoshihiro-maeda-cc/real-radio-calisthenics/search?l=javascript" target="_blank">
+        <img src="https://img.shields.io/github/languages/top/yoshihiro-maeda-cc/real-radio-calisthenics" alt="Language Top">
     </a>
     <a href="https://github.com/issues" target="_blank">
-        <img src="https://img.shields.io/github/issues/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Issues">
+        <img src="https://img.shields.io/github/issues/yoshihiro-maeda-cc/real-radio-calisthenics" alt="Issues">
     </a>
     <a href="https://github.com/issues?q=is%3Aclosed+is%3Aissue+author%3Ayoshihiro-maeda-cc+archived%3Afalse+" target="_blank">
-        <img src="https://img.shields.io/github/issues-closed-raw/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Issues Closed">
+        <img src="https://img.shields.io/github/issues-closed-raw/yoshihiro-maeda-cc/real-radio-calisthenics" alt="Issues Closed">
     </a>
-    <a href="https://github.com/yoshihiro-maeda-cc/nri-3-api-solo-demo/commits/main" target="_blank">
-        <img src="https://img.shields.io/github/last-commit/yoshihiro-maeda-cc/nri-3-api-solo-demo" alt="Last Commit">
+    <a href="https://github.com/yoshihiro-maeda-cc/real-radio-calisthenics/commits/main" target="_blank">
+        <img src="https://img.shields.io/github/last-commit/yoshihiro-maeda-cc/real-radio-calisthenics" alt="Last Commit">
     </a>
 </p>
 

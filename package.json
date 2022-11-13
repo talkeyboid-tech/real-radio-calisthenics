@@ -1,5 +1,5 @@
 {
-  "name": "nri-3-api-solo-demo",
+  "name": "real-radio-calisthenics",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -16,15 +16,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yoshihiro-maeda-cc/nri-3-api-solo-demo.git"
+    "url": "git+https://github.com/yoshihiro-maeda-cc/real-radio-calisthenics.git"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yoshihiro-maeda-cc/nri-3-api-solo-demo/issues"
+    "url": "https://github.com/yoshihiro-maeda-cc/real-radio-calisthenics/issues"
   },
-  "homepage": "https://github.com/yoshihiro-maeda-cc/nri-3-api-solo-demo#readme",
+  "homepage": "https://github.com/yoshihiro-maeda-cc/real-radio-calisthenics#readme",
   "devDependencies": {
     "chai": "^4.3.7",
     "chai-http": "^4.3.0",
