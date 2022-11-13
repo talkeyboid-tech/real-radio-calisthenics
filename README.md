@@ -1,6 +1,6 @@
 ![logo](./docs/assets/logo.png)
 
-<p align="center"><img src="https://img.shields.io/github/license/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/languages/code-size/yoshihiro-maeda-cc/nri-3-api-solo-demo"></p>
+<p align="center"><img src="https://img.shields.io/badge/org-hippopotamus-brightgreen"><img src="https://img.shields.io/github/license/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/languages/code-size/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/languages/top/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/issues/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/issues-closed-raw/yoshihiro-maeda-cc/nri-3-api-solo-demo"><img src="https://img.shields.io/github/last-commit/yoshihiro-maeda-cc/nri-3-api-solo-demo"></p>
 
 > ⚠️ これは完全なるジョークプロジェクトです。書いてあることを決して鵜呑みにしないでください。
 
@@ -14,15 +14,31 @@ npm install
 
 ## 🚀 Serving API
 
+サーバ起動
+
 ```bash
 npm run start
 ```
 
-> `npm run dev` では nodemon で起動されます。
+サーバ起動（ホットリロード）
+
+```bash
+npm run dev
+```
 
 ## 📖 Documentation
 
+### 👀 Overview
+
+[presentation slide](./docs/presentation/Presentation.pdf)
+
+### 🔎 API Docs
+
 ブラウザで [/api-docs](http://localhost:3000/api-docs) にアクセスしてください。
+
+### 🛝 Playground
+
+[ルートURL](http://localhost:3000/) へアクセスすることで画面サンプルを見ることができます。
 
 ## 👮‍♂️ Our Policy
 
