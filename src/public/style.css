@@ -18,6 +18,7 @@
 }
 
 #refresh-btn {
+  margin-top: 3em;
   display: inline-block;
   outline: none;
   cursor: pointer;
@@ -34,4 +35,9 @@
 #refresh-btn:hover {
   transition: all 0.1s ease;
   box-shadow: 0 0 0 0 #fff, 0 0 0 3px #1de9b6;
+}
+
+#contents {
+  background-image: url('background.png');
+  background-size: 30%;
 }
