@@ -30,8 +30,29 @@
 
 ## 🛠️ Installation
 
+### Setup Modules
+
 ```bash
 npm install
+```
+
+### Setup PostgreSQL
+
+プロジェクトルートに `.env.local` を配置してください。
+
+```env
+DB_USER=<DB USER NAME>
+DB_PASSWORD=<DB PASSWORD>
+DB_NAME=solo_api_store
+GOOGLE_API_KEY=<API KEY>
+```
+
+> アプリ利用のみの場合、`GOOGLE_API_KEY` は不要です。これは初期データ投入スクリプトの実行に利用します。
+
+マイグレーションを実行してください。
+
+```bash
+npm run migrate && npm run seed
 ```
 
 ## 🚀 Serving API
@@ -56,11 +77,13 @@ npm run dev
 
 ### 🔎 API Docs
 
-ブラウザで [/api-docs](http://localhost:3000/api-docs) にアクセスしてください。
+サーバーを立ち上げたあとブラウザで [/api-docs](http://localhost:3000/api-docs) にアクセスしてください。
+
+ドキュメントの閲覧のみの場合、[ここ](./docs/swaggerui_html/SwaggerUI_Static_v1.html) から見ることができます。
 
 ### 🛝 Playground
 
-[ルート URL](http://localhost:3000/) へアクセスすることで画面サンプルを見ることができます。
+サーバを立ち上げたあと、[ルート URL](http://localhost:3000/) へアクセスすることで画面サンプルを見ることができます。
 
 > Chrome では動画の読み込みが遅くなる可能性があります。
 
