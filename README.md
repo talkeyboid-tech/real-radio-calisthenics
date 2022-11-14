@@ -38,6 +38,8 @@ npm install
 
 ### Setup PostgreSQL
 
+> ⚠️ 前提：ローカルに PostgreSQL がインストールされていること
+
 プロジェクトルートに `.env.local` を配置してください。
 
 ```env
@@ -48,6 +50,12 @@ GOOGLE_API_KEY=<API KEY>
 ```
 
 > アプリ利用のみの場合、`GOOGLE_API_KEY` は不要です。これは初期データ投入スクリプトの実行に利用します。
+
+データベースを作成してください。
+
+```
+create database solo_api_store;
+```
 
 マイグレーションを実行してください。
 
