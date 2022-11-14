@@ -37,6 +37,7 @@ router.post('/', async (req, res) => {
   } catch (err) {
     if (err instanceof TypeError)
       return res.status(400).json(JSON.parse(err.message)).end();
+    if (err.code === '23505') return res.status(409).end();
     return res.status(500).end();
   }
 });

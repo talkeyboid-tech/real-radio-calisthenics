@@ -275,6 +275,13 @@ describe('Solo API Server', () => {
       });
     });
 
+    describe('POST / 同じ動画IDの場合', () => {
+      it('HTTP400 動画情報を追加したが同じIDの場合エラー', async () => {
+        const res = await request.post('/videos').send(VIDEOS_JSON[1]);
+        res.should.have.status(409);
+      });
+    });
+
     describe('PATCH /:id', () => {
       beforeEach(async () => {
         await knex.insert(newVideo.correct).into(VIDEOS_TBL);

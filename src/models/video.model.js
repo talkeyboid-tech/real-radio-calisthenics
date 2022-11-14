@@ -111,23 +111,29 @@ const videoModel = {
 
   create(obj) {
     validateRequired(validateProps(obj));
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       knex(VIDEOS_TBL)
         .insert(obj)
         .returning('id')
         .then((res) => {
           resolve(res[0].id);
+        })
+        .catch((err) => {
+          reject(err);
         });
     });
   },
 
   remove(id) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       knex(VIDEOS_TBL)
         .where('id', '=', id)
         .del()
         .then((res) => {
           resolve(res);
+        })
+        .catch((err) => {
+          reject(err);
         });
     });
   },
