@@ -151,6 +151,8 @@ paths:
                   value:
                     message: 不正な項目が含まれています
                     invalid: abcdefg
+        409:
+          description: 競合エラー
   /videos/{id}:
     get:
       tags: ['videos']
